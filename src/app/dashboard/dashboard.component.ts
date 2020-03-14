@@ -65,7 +65,7 @@ onSubmit() {
             for(var i = 0; i < result['data'].length; i++) {
               // this.cities.push(result['data'][i]);
               // let cities = result => [...new Set(result['data'])];
-              this.cities =  Array.from(result['data'].reduce((m, t) => m.set(t.city, t), new Map()).values()); // removed duplicates from result
+              this.cities =  Array.from(result['data'].reduce((m, t) => m.set(t.state, t), new Map()).values()); // removed duplicates from result
             }
           });
     }
