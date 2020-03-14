@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiServiceService } from '../api-service.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import {first} from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,39 +10,62 @@ import { first } from 'rxjs/operators';
 })
 export class DashboardComponent implements OnInit {
 
+  item: any;
   inputForm: FormGroup;
-  submitted = false;
-  cities:any=[];
-
-  constructor(private service: ApiServiceService, private formBuilder: FormBuilder) { }
+  submitted = null;
+  cities:any[] =[];
+   city = [];
+  isLoading = false;
+  total:any;
+  constructor(private service: ApiServiceService, private formBuilder: FormBuilder) { 
+    this.inputForm = this.formBuilder.group({  
+      input: new FormControl('', [  
+        Validators.required,    
+        Validators.pattern('^[a-zA-Z]*$')])
+      });  
+  }
 
   ngOnInit() {
-    this.inputForm = this.formBuilder.group({
-      input: ['',Validators.required] //  Validators.pattern('^[a-zA-Z]*$') 
-  });
   }
 
   get f() { return this.inputForm.controls; }
 
-  onSubmit() {
-    this.submitted = true;
-   
+   clearArray(array) {
+    while (array.length) {
+      array.pop();
+    }
+  }
 
-    // stop here if form is invalid
+// removeDuplicates(array, key) { 
+//   let lookup = {};  
+//    return array.filter(obj => !lookup[obj[key]] && lookup[obj[key]] == true);
+// }
+
+// const result = Array.from(this.item.reduce((m, t) => m.set(t.name, t), new Map()).values());
+
+
+onSubmit() {
+    this.submitted = true;
+
     if (this.inputForm.invalid) {
         return;
     }
     if (this.inputForm.valid) {
       this.submitted = true;
-      // console.log("sadasd", this.inputForm.value)
+      this.isLoading = true;
       this.service.getCitiesFromApi(this.inputForm.value)
-        .pipe(first())
-        .subscribe(
-          result => {
-            // console.log();
+      .pipe(first())
+      .subscribe(
+        result => {
+          
+          this.clearArray(this.cities);
+            this.isLoading = false;
             this.inputForm.reset();
-            this.cities.push(result['data']);
-            console.log(this.cities)
+            this.total = result['total'];
+            for(var i = 0; i < result['data'].length; i++) {
+              // this.cities.push(result['data'][i]);
+              this.cities =  Array.from(result['data'].reduce((m, t) => m.set(t.state, t), new Map()).values()); // removed duplicates from result
+            }
           });
     }
 

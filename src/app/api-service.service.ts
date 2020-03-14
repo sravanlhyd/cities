@@ -11,7 +11,6 @@ export class ApiServiceService {
   }
 
   getCitiesFromApi(input): Observable<any[]> {
-    console.log("sdasds", input.input)
     return this.http.get<any[]>(`https://jsonmock.hackerrank.com/api/cities/?city=${input.input}`)
   }
 }

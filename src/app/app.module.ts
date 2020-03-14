@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 import { AppComponent } from './app.component';
 import { ApiServiceService } from './api-service.service';
@@ -20,6 +21,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HttpClientModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule
     // FormsModule,
   ],
